@@ -1,0 +1,15 @@
+/ {
+    aliases {
+        weather = &bme280;
+    };
+};
+
+&lpi2c1 {
+	status = "okay";
+
+	bme280: bme280@76 {
+		status = "okay";
+		compatible = "bosch,bme280";
+		reg = <0x76>;
+	};
+};
