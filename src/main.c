@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2023 Golioth, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(golioth_temperature, LOG_LEVEL_DBG);
 
