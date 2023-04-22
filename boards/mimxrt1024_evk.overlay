@@ -1,0 +1,23 @@
+/ {
+    aliases {
+        weather = &bme280;
+    };
+};
+
+&enet {
+	/* These pins are mapped wrong in the Zephyr tree */
+	int-gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
+	reset-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+};
+
+&lpi2c1 {
+	status = "okay";
+	pinctrl-0 = <&pinmux_lpi2c1>;
+	pinctrl-names = "default";
+
+	bme280: bme280@76 {
+		status = "okay";
+		compatible = "bosch,bme280";
+		reg = <0x76>;
+	};
+};
