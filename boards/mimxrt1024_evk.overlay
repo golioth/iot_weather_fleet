@@ -21,3 +21,10 @@
 		reg = <0x76>;
 	};
 };
+
+&lpi2c4 {
+	fxos8700: fxos8700@1f {
+		/* This sensor is not populated on the evaluation kit */
+		status = "disabled";
+	};
+};
