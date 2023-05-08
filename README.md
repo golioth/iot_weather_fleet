@@ -12,8 +12,10 @@ You can build this project for the Nordic nRF9160, NXP i.MX1062, or ESP32 and
 your choice of an Infineon DPS310 or Bosch BME280 temperature sensor. The result
 is a fleet of diverse hardware all sending temperature data to Golioth.
 
-This demo was put together for the *Building a modular codebase with Zephyr RTOS
-and Devicetree* talk during the [2023 Embedded Online
+This demo was put together for the [*Building a modular codebase with Zephyr
+RTOS and
+Devicetree*](https://embeddedonlineconference.com/session/Building_a_Modular_Codebase_with_Zephyr_RTOS_and_Devicetree)
+talk during the [2023 Embedded Online
 Conference](https://embeddedonlineconference.com/).
 
 **Note:** for brevity, some Zephyr best practices have not been used. Please see
@@ -98,12 +100,6 @@ uart:~$ settings set golioth/psk-id <my-psk-id@my-project>
 uart:~$ settings set golioth/psk <my-psk>
 uart:~$ kernel reboot cold
 ```
-
-## A note on Zephyr best practices
-
-The `main.c` file in this project has been condensed to the bare-minimum for
-readability. However, this removed several best practices that should be learned
-and used on production projects.
 
 ### Checking return codes
 

@@ -22,10 +22,18 @@ static void golioth_on_connect(struct golioth_client *client)
 	k_sem_give(&connected);
 }
 
-static int async_handler(struct golioth_req_rsp *rsp) { return 0; }
+static int async_handler(struct golioth_req_rsp *rsp) {
+	if (rsp->err) {
+		LOG_WRN("Failed to push temperature: %d", rsp->err);
+		return rsp->err;
+	}
+
+	return 0;
+}
 
 void main(void)
 {
+	int err;
 	struct sensor_value tem;
 	char sbuf[32];
 
@@ -40,6 +48,18 @@ void main(void)
 
 	const struct device *weather_dev = DEVICE_DT_GET(DT_ALIAS(weather));
 
+	if (weather_dev == NULL) {
+		LOG_ERR("Error: no sensor found.");
+	}
+
+	if (!device_is_ready(weather_dev)) {
+		LOG_ERR("Error: Sensor %s is not ready;"
+			"check the driver initialization logs for errors.",
+			weather_dev->name);
+	} else {
+		LOG_INF("Found sensor: %s", weather_dev->name);
+	}
+
 	while (true) {
 		sensor_sample_fetch(weather_dev);
 		sensor_channel_get(weather_dev, SENSOR_CHAN_AMBIENT_TEMP, &tem);
@@ -47,10 +67,15 @@ void main(void)
 		snprintk(sbuf, sizeof(sbuf), "%d.%06d", tem.val1, abs(tem.val2));
 		LOG_DBG("Sending temperature %s", sbuf);
 
-		golioth_stream_push_cb(client, "temp",
-			     	       GOLIOTH_CONTENT_FORMAT_APP_JSON,
-				       sbuf, strlen(sbuf),
-				       async_handler, NULL);
+		err = golioth_stream_push_cb(client, "temp",
+					     GOLIOTH_CONTENT_FORMAT_APP_JSON,
+					     sbuf, strlen(sbuf),
+					     async_handler, NULL);
+
+		if (err) {
+			LOG_WRN("Failed to push temperature: %d", err);
+			return;
+		}
 
 		k_sleep(K_SECONDS(5));
 	}
