@@ -1,4 +1,4 @@
-# Golioth Weather Demo
+# Golioth Demo: IoT Weather Fleet
 
 This repository demonstrates a very bare-bones temperature reporting
 application. It highlights how to use [Zephyr
@@ -17,9 +17,6 @@ RTOS and
 Devicetree*](https://embeddedonlineconference.com/session/Building_a_Modular_Codebase_with_Zephyr_RTOS_and_Devicetree)
 talk during the [2023 Embedded Online
 Conference](https://embeddedonlineconference.com/).
-
-**Note:** for brevity, some Zephyr best practices have not been used. Please see
-the section at the bottom of this readme for more on this topic.
 
 ## Golioth
 
@@ -41,14 +38,14 @@ correct dependencies.
 When building for a Nordic device, initialize using `west-ncs.yml`:
 
 ```
-west init -m https://github.com/path/to/repository.git --mf west-ncs.yml
+west init -m https://github.com/golioth/iot_weather_fleet.git --mf west-ncs.yml
 west update
 ```
 
 For all other devices, initialize using `west-zephyr.yml`
 
 ```
-west init -m https://github.com/path/to/repository.git --mf west-zephyr.yml
+west init -m https://github.com/golioth/iot_weather_fleet.git --mf west-zephyr.yml
 west update
 ```
 
@@ -101,56 +98,3 @@ uart:~$ settings set golioth/psk <my-psk>
 uart:~$ kernel reboot cold
 ```
 
-### Checking return codes
-
-It is highly recommended that you test function return codes against [the Zephyr
-error numbers
-list](https://docs.zephyrproject.org/apidoc/latest/group__system__errno.html).
-For instance, checking Golioth API call return codes is well demonstrated in
-this snippet from [our LightDB Stream
-sample](https://github.com/golioth/golioth-zephyr-sdk/blob/main/samples/lightdb_stream/src/main.c)
-application:
-
-```c
-int err;
-
-err = golioth_stream_push_cb(client, "temp",
-			     GOLIOTH_CONTENT_FORMAT_APP_JSON,
-			     sbuf, strlen(sbuf),
-			     temperature_push_handler, NULL);
-
-if (err) {
-	LOG_WRN("Failed to push temperature: %d", err);
-	return;
-}
-```
-
-### Checking that a device is ready
-
-When getting a device such as a sensor from Devicetree, it is recommended that
-you use `device_is_ready()` to verify. This is well demonstrated in this
-function from [the Zephyr BME280 sample
-code](https://github.com/zephyrproject-rtos/zephyr/blob/main/samples/sensor/bme280/src/main.c):
-
-```c
-static const struct device *get_bme280_device(void)
-{
-	const struct device *const dev = DEVICE_DT_GET_ANY(bosch_bme280);
-
-	if (dev == NULL) {
-		/* No such node, or the node does not have status "okay". */
-		printk("\nError: no device found.\n");
-		return NULL;
-	}
-
-	if (!device_is_ready(dev)) {
-		printk("\nError: Device \"%s\" is not ready; "
-		       "check the driver initialization logs for errors.\n",
-		       dev->name);
-		return NULL;
-	}
-
-	printk("Found device \"%s\", getting sensor data\n", dev->name);
-	return dev;
-}
-```
