@@ -68,9 +68,6 @@ After changing this file, run `west update`
 
 ## Building
 
-Copy `credentials.conf_example` to `credentials.conf` and update with your WiFi
-(if needed) and Golioth credentials.
-
 Build and flash the project:
 
 ```
@@ -85,6 +82,21 @@ west flash
 # ESP32 (uses west-zephyr.yml)
 west build -b esp32 .
 west flash
+```
+
+## Save Device Credentials to Non-Volatile Storage
+
+Each device needs to be assigned its own PSK-ID and PSK to authenticate with
+Golioth. Devices that use WiFi also need an SSID and PSK. These are assigned
+(once) via the serial console after the firmware has been flashed and will
+persist across future firmware upgrades.
+
+```
+uart:~$ settings set wifi/ssid <my-wifi-ap-ssid>
+uart:~$ settings set wifi/psk <my-wifi-ap-password>
+uart:~$ settings set golioth/psk-id <my-psk-id@my-project>
+uart:~$ settings set golioth/psk <my-psk>
+uart:~$ kernel reboot cold
 ```
 
 ## A note on Zephyr best practices
