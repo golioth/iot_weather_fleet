@@ -74,8 +74,8 @@ Build and flash the project:
 west build -b sparkfun_thing_plus_nrf9160_ns .
 west flash
 
-# NXP i.MX RT1060 EVKB (uses west-zephyr.yml)
-west build -b mimxrt1060_evkb .
+# NXP i.MX RT1024 EVK (uses west-zephyr.yml)
+west build -b mimxrt1024_evk .
 west flash
 
 # ESP32 (uses west-zephyr.yml)
@@ -98,3 +98,8 @@ uart:~$ settings set golioth/psk <my-psk>
 uart:~$ kernel reboot cold
 ```
 
+## How to Hardcode Device Credentials
+
+If you prefer not to use the serial shell for device credentials, you may
+hardcode them into the build. Uncomment the lines at the bottom of the prj.conf
+file and replace the PSK-ID/PSK with your Golioth device credentials.
