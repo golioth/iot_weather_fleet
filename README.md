@@ -103,3 +103,13 @@ uart:~$ kernel reboot cold
 If you prefer not to use the serial shell for device credentials, you may
 hardcode them into the build. Uncomment the lines at the bottom of the prj.conf
 file and replace the PSK-ID/PSK with your Golioth device credentials.
+
+## Settings Service
+
+The following settings should be set in the Device Settings menu of the
+[Golioth Console](https://console.golioth.io).
+
+* `LOOP_DELAY_S`
+  * Adjusts the delay between sensor readings. Set to an integer value
+    (seconds).
+  * Default value is `5` seconds.
